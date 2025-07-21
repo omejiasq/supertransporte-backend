@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:6
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3002'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  mantenimiento-service:
+    build:
+      context: ./mantenimiento-service
+      dockerfile: Dockerfile
+    ports:
+      - '3004:3004'
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - auth-service
+
+volumes:
+  mongo-data:
