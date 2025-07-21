@@ -13,8 +13,8 @@ const seed = async () => {
     { module:'despachos',      action:'write' },
     { module:'mantenimientos', action:'read' },
     { module:'mantenimientos', action:'write' },
-    { module:'PESV',           action:'read' },
-    { module:'PESV',           action:'write' },
+    //{ module:'PESV',           action:'read' },
+    //{ module:'PESV',           action:'write' },
     { module:'novedades',      action:'read' },
     { module:'novedades',      action:'write' },
     // Añade aquí más módulos/acciones
