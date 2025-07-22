@@ -30,5 +30,16 @@ services:
       - mongo
       - auth-service
 
+  gateway:
+    build:
+      context: ./gateway
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./gateway/.env
+    depends_on:
+      - auth-service
+      - mantenimiento-service
+      
 volumes:
   mongo-data:

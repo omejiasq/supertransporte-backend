@@ -1,3 +1,4 @@
+console.log('🔑 JWT_SECRET is:', process.env.JWT_SECRET);
 require('dotenv').config();
 const express  = require('express');
 const mongoose = require('mongoose');

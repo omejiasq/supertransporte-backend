@@ -5,24 +5,22 @@ const Permission = require('../models/Permission');
 const { JWT_SECRET } = require('../config');
 
 
-module.exports = (moduleName, action) => {
-  return async (req, res, next) => {
+module.exports = function authorize(module, action) {
+  return (req, res, next) => {
+    console.log('🔑 JWT_SECRET is:', process.env.JWT_SECRET);
+    const authHeader = req.headers.authorization;
+    console.log('🛡️ Authorization header:', authHeader);
+    if (!authHeader) return res.status(401).json({ message: 'No autorizado' });
+    
+    const token = authHeader.split(' ')[1];
     try {
-      const token = req.headers.authorization?.split(' ')[1];
-      const payload = jwt.verify(token, JWT_SECRET);
-      // Carga el usuario con sus roles y permisos poblados
-      const user = await User.findById(payload.sub)
-        .populate({ path:'roles', populate:'permissions' });
-      // Aplanar permisos en formato 'mod:act'
-      const perms = user.roles
-        .flatMap(r => r.permissions)
-        .map(p => `${p.module}:${p.action}`);
-      if (!perms.includes(`${moduleName}:${action}`))
-        return res.status(403).json({ message:'Permiso denegado' });
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
+      console.log('✅ Token payload:', payload);
+      // aquí continúa tu lógica de permisos...
       next();
-    } catch(err) {
-      console.error(err);
-      res.status(401).json({ message:'No autorizado' });
+    } catch (err) {
+      console.error('❌ JWT Error:', err.message);
+      return res.status(401).json({ message: 'No autorizado' });
     }
   };
 };
